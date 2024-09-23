@@ -1,17 +1,17 @@
 # MiniTorch
-MiniTorch is a minimalistic machine learning framework that replicates core functionalities of PyTorch. This library includes tensor operations, auto-differentiation, and neural network modules.
+MiniTorch is a minimalistic machine learning framework that replicates core functionalities of PyTorch, including tensor operations, auto-differentiation, and neural network modules.
 
 This project is created based on the teaching library developed by Sasha Ruch for the course Machine Learning Engineering at Cornell Tech. Please refer to the documentation [here](https://minitorch.github.io/) for more details about the framework.
 
-## Project Setup
+## Installation
 
-### Python Version
+#### Python Version
 MiniTorch requires Python 3.11 or later. Check your version of Python by running `python --version`.
 
-### Virtual Environment
-Set up a virtual environment for this project can help us install and manage packages that are used for this project without impacting the rest of the system. I used `venv` to manage the virtual environment for this project.
+#### Virtual Environment
+Set up a virtual environment for this project can help us install packages that are used for this project without impacting the rest of the system. I used `venv` to manage the virtual environment for this project.
 
-First create a workspace to contain and run this project by running the following command:
+First create a workspace for this project:
 ```
 mkdir workspace
 ```
@@ -26,14 +26,14 @@ To activate the virtual environment, run the following command:
 source .venv/bin/activate
 ```
 
-### Install Packages
+#### Install Packages
 When the virtual environment is activated, go to the project folder and install the packages used for this project by running the following commands:
 ```
 python -m pip install -r requirements.txt
 python -m pip install -r requirements.extra.txt
 ```
 
-### Check if Everything Works
+#### Check if Everything Works
 To make sure everything works, run the following command:
 ```
 import minitorch
@@ -47,7 +47,7 @@ streamlit run app.py -- 0
 ```
 
 
-## Trainining Log
+## Binary Classification Tasks Training Log Using MiniTorch
 
 ### Simple Dataset
 
