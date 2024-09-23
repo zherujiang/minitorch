@@ -43,7 +43,7 @@ import minitorch
 You can stand up the App and start training models and view visualization results by running the following command:
 
 ```
-streamlit run app.py -- 0
+streamlit run app.py -- 1
 ```
 
 
