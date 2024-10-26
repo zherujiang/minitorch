@@ -30,16 +30,12 @@ def central_difference(f: Any, *vals: Any, arg: int = 0, epsilon: float = 1e-6) 
     up_vals[arg] += epsilon
     low_vals = [val for val in vals]
     low_vals[arg] -= epsilon
-    # print(up_vals)
-    # print(type(up_vals))
 
     f_plus = f(*up_vals)
     f_minus = f(*low_vals)
-    print(f_plus, type(f_plus))
     slope = (f_plus - f_minus) / (2 * epsilon)
 
     return slope
-    # raise NotImplementedError("Need to implement for Task 1.1")
 
 
 variable_count = 1

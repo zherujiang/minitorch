@@ -1,5 +1,10 @@
 minitorch/operators.py
 minitorch/module.py
-tests/test_module.py
-tests/test_operators.py
+minitorch/autodiff.py
+minitorch/scalar.py
+minitorch/scalar_functions.py
+minitorch/optim.py
+minitorch/datasets.py
 project/run_manual.py
+project/run_scalar.py
+tests/strategies.py

@@ -186,8 +186,9 @@ class Sigmoid(ScalarFunction):
         Computes the sigmoid of x: f(x) = 1 / (1 + e^(-x))
         This implementation uses the sigmoid method from the operators module.
         """
-        ctx.save_for_backward(x)
-        return operators.sigmoid(float(x))
+        out = operators.sigmoid(float(x))
+        ctx.save_for_backward(out)
+        return out
 
     @staticmethod
     def backward(ctx: Context, d_output: float) -> float:
@@ -197,9 +198,8 @@ class Sigmoid(ScalarFunction):
         The derivative of the sigmoid function is: f'(x) = f(x) * (1 - f(x))
         where f(x) is the sigmoid function.
         """
-        (x,) = ctx.saved_values
-        sigmoid_x = operators.sigmoid(x)
-        return d_output * sigmoid_x * (1 - sigmoid_x)
+        (sigma,) = ctx.saved_values
+        return d_output * sigma * (1 - sigma)
 
 
 class ReLU(ScalarFunction):
@@ -228,8 +228,9 @@ class Exp(ScalarFunction):
         Computes e^x using the exp method from the operators module.
         Saves the input x for use in the backward pass.
         """
-        ctx.save_for_backward(x)
-        return operators.exp(float(x))
+        out = operators.exp(float(x))
+        ctx.save_for_backward(out)
+        return out
 
     @staticmethod
     def backward(ctx: Context, d_output: float) -> float:
@@ -238,8 +239,8 @@ class Exp(ScalarFunction):
         Computes the derivative of e^x with respect to x.
         The derivative of e^x is e^x itself.
         """
-        (x,) = ctx.saved_values
-        return d_output * operators.exp(x)
+        (out,) = ctx.saved_values
+        return d_output * out
 
 
 class LT(ScalarFunction):
