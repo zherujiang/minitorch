@@ -48,8 +48,8 @@ def index_to_position(index: Index, strides: Strides) -> int:
     """
     # Task 2.1.
     position = 0
-    for i in range(len(index)):
-        position += index[i] * strides[i]
+    for ind, stride in zip(index, strides):
+        position += ind * stride
     return position
 
 
@@ -231,7 +231,8 @@ class TensorData:
                 raise IndexingError(f"Negative indexing for {aindex} not supported.")
 
         # Call fast indexing.
-        return index_to_position(array(index), self._strides)
+        # return index_to_position(array(index), self._strides) #original
+        return index_to_position(aindex, self._strides)
 
     def indices(self) -> Iterable[UserIndex]:
         """Generate all possible indices for the tensor."""
