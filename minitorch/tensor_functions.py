@@ -105,10 +105,10 @@ class All(Function):
     @staticmethod
     def forward(ctx: Context, a: Tensor, dim: Optional[Tensor] = None) -> Tensor:
         """Return 1 if all are true"""
-        if dim is not None:
-            return a.f.mul_reduce(a, int(dim.item()))
+        if dim is None:
+            return a.f.mul_reduce(a.contiguous().view(a.size), 0)
         else:
-            return a.f.mul_reduce(a.contiguous().view(int(operators.prod(a.shape))), 0)
+            return a.f.mul_reduce(a, int(dim.item()))
 
 
 # Task 2.3.
@@ -130,15 +130,15 @@ class Sigmoid(Function):
     @staticmethod
     def forward(ctx: Context, t1: Tensor) -> Tensor:
         """Apply the sigmoid function element-wise to the input tensor."""
-        result = t1.f.sigmoid_map(t1)
-        ctx.save_for_backward(result)
-        return result
+        out = t1.f.sigmoid_map(t1)
+        ctx.save_for_backward(out)
+        return out
 
     @staticmethod
     def backward(ctx: Context, grad_output: Tensor) -> Tensor:
         """Compute the gradient for the sigmoid operation."""
-        (sigmoid,) = ctx.saved_values
-        return grad_output * sigmoid * (sigmoid.f.neg_map(sigmoid) + 1)
+        (sigma,) = ctx.saved_values
+        return grad_output * sigma * (-sigma + 1)
 
 
 class ReLU(Function):
@@ -173,9 +173,9 @@ class Exp(Function):
     @staticmethod
     def forward(ctx: Context, t1: Tensor) -> Tensor:
         """Compute the exponential function element-wise on the input tensor."""
-        result = t1.f.exp_map(t1)
-        ctx.save_for_backward(result)
-        return result
+        out = t1.f.exp_map(t1)
+        ctx.save_for_backward(out)
+        return out
 
     @staticmethod
     def backward(ctx: Context, grad_output: Tensor) -> Tensor:
@@ -189,10 +189,10 @@ class Sum(Function):
     def forward(ctx: Context, a: Tensor, dim: Optional[Tensor] = None) -> Tensor:
         """Compute the sum of all elements or along a specified dimension."""
         ctx.save_for_backward(a, dim)
-        if dim is not None:
-            return a.f.add_reduce(a, int(dim.item()))
+        if dim is None:
+            return a.f.add_reduce(a.contiguous().view(a.size), 0)
         else:
-            return a.f.add_reduce(a.contiguous().view(int(operators.prod(a.shape))), 0)
+            return a.f.add_reduce(a, int(dim.item()))
 
     @staticmethod
     def backward(
@@ -210,24 +210,28 @@ class LT(Function):
     @staticmethod
     def forward(ctx: Context, t1: Tensor, t2: Tensor) -> Tensor:
         """Compute element-wise less than comparison between two tensors."""
+        ctx.save_for_backward(t1.shape, t2.shape)
         return t1.f.lt_zip(t1, t2)
 
     @staticmethod
     def backward(ctx: Context, grad_output: Tensor) -> Tuple[Tensor, Tensor]:
         """Compute the gradient for the less than operation."""
-        return zeros(grad_output.shape), zeros(grad_output.shape)
+        t1_shape, t2_shape = ctx.saved_values
+        return zeros(t1_shape), zeros(t2_shape)
 
 
 class EQ(Function):
     @staticmethod
     def forward(ctx: Context, t1: Tensor, t2: Tensor) -> Tensor:
         """Compute element-wise equality comparison between two tensors."""
+        ctx.save_for_backward(t1.shape, t2.shape)
         return t1.f.eq_zip(t1, t2)
 
     @staticmethod
     def backward(ctx: Context, grad_output: Tensor) -> Tuple[Tensor, Tensor]:
         """Compute the gradient for the equality operation."""
-        return zeros(grad_output.shape), zeros(grad_output.shape)
+        t1_shape, t2_shape = ctx.saved_values
+        return zeros(t1_shape), zeros(t2_shape)
 
 
 class IsClose(Function):
@@ -254,8 +258,7 @@ class Permute(Function):
         reverse_order = [0] * order.size
         for i in range(order.size):
             reverse_order[int(order[i])] = i
-        return Permute.apply(grad_output, minitorch.tensor(reverse_order)), 0.0
-
+        return grad_output._new(grad_output._tensor.permute(*reverse_order)), 0.0
 
 class View(Function):
     @staticmethod
