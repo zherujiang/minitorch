@@ -377,12 +377,12 @@ def tensor_reduce(
     ) -> None:
         """Applies the reduction function to the input tensor along the specified dimension and stores the result in the output tensor."""
         # Task 2.3.
-        rdim_len = a_shape[reduce_dim]
+        reduce_size = a_shape[reduce_dim]
         out_index = np.array(out_shape)
 
         for i in range(len(out)):
             to_index(i, out_shape, out_index)
-            for k in range(rdim_len):
+            for k in range(reduce_size):
                 a_index = out_index.copy()
                 a_index[reduce_dim] = k
                 a_position = index_to_position(a_index, a_strides)

@@ -300,12 +300,12 @@ class Tensor:
     @property
     def size(self) -> int:
         """Returns the total number of elements in the tensor."""
-        return int(operators.prod(self.shape))
+        return self._tensor.size
 
     @property
     def dims(self) -> int:
         """Returns the number of dimensions of the tensor."""
-        return len(self.shape)
+        return self._tensor.dims
 
     def __add__(self, b: TensorLike) -> Tensor:
         """Adds two tensors element-wise."""
