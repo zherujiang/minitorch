@@ -123,7 +123,7 @@ class Mul(Function):
     def backward(ctx: Context, grad_output: Tensor) -> Tuple[Tensor, Tensor]:
         """Compute the gradient for the multiplication operation."""
         t1, t2 = ctx.saved_values
-        return grad_output * t2, grad_output * t1
+        return grad_output.f.mul_zip(t2, grad_output), grad_output.f.mul_zip(t1, grad_output)
 
 
 class Sigmoid(Function):
@@ -181,7 +181,7 @@ class Exp(Function):
     def backward(ctx: Context, grad_output: Tensor) -> Tensor:
         """Compute the gradient for the exponential operation."""
         (exp,) = ctx.saved_values
-        return grad_output * exp
+        return grad_output.f.mul_zip(exp, grad_output)
 
 
 class Sum(Function):
