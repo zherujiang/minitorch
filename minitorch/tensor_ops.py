@@ -285,7 +285,8 @@ def tensor_map(
             to_index(i, out_shape, out_index)
             broadcast_index(out_index, out_shape, in_shape, in_index)
             in_position = index_to_position(in_index, in_strides)
-            out[i] = fn(in_storage[in_position])
+            out_position = index_to_position(out_index, out_strides)
+            out[out_position] = fn(in_storage[in_position])
 
     return _map
 
@@ -343,7 +344,8 @@ def tensor_zip(
             broadcast_index(out_index, out_shape, b_shape, b_index)
             a_position = index_to_position(a_index, a_strides)
             b_position = index_to_position(b_index, b_strides)
-            out[i] = fn(a_storage[a_position], b_storage[b_position])
+            out_position = index_to_position(out_index, out_strides)
+            out[out_position] = fn(a_storage[a_position], b_storage[b_position])
 
     return _zip
 
@@ -382,11 +384,12 @@ def tensor_reduce(
 
         for i in range(len(out)):
             to_index(i, out_shape, out_index)
+            out_position = index_to_position(out_index, out_strides)
             for k in range(reduce_size):
                 a_index = out_index.copy()
                 a_index[reduce_dim] = k
                 a_position = index_to_position(a_index, a_strides)
-                out[i] = fn(out[i], a_storage[a_position])
+                out[out_position] = fn(out[out_position], a_storage[a_position])
 
     return _reduce
 
