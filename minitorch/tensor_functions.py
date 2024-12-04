@@ -123,7 +123,9 @@ class Mul(Function):
     def backward(ctx: Context, grad_output: Tensor) -> Tuple[Tensor, Tensor]:
         """Compute the gradient for the multiplication operation."""
         t1, t2 = ctx.saved_values
-        return grad_output.f.mul_zip(t2, grad_output), grad_output.f.mul_zip(t1, grad_output)
+        return grad_output.f.mul_zip(t2, grad_output), grad_output.f.mul_zip(
+            t1, grad_output
+        )
 
 
 class Sigmoid(Function):
@@ -259,6 +261,7 @@ class Permute(Function):
         for i in range(order.size):
             reverse_order[int(order[i])] = i
         return grad_output._new(grad_output._tensor.permute(*reverse_order)), 0.0
+
 
 class View(Function):
     @staticmethod

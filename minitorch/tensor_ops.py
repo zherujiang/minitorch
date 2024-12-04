@@ -386,9 +386,8 @@ def tensor_reduce(
             to_index(i, out_shape, out_index)
             out_position = index_to_position(out_index, out_strides)
             for k in range(reduce_size):
-                a_index = out_index.copy()
-                a_index[reduce_dim] = k
-                a_position = index_to_position(a_index, a_strides)
+                out_index[reduce_dim] = k
+                a_position = index_to_position(out_index, a_strides)
                 out[out_position] = fn(out[out_position], a_storage[a_position])
 
     return _reduce

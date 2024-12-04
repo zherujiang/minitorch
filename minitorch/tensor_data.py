@@ -67,9 +67,11 @@ def to_index(ordinal: int, shape: Shape, out_index: OutIndex) -> None:
 
     """
     # Task 2.1.
+    curr_ordinal = ordinal + 0
     for i in range(len(shape) - 1, -1, -1):
-        out_index[i] = ordinal % shape[i]
-        ordinal = ordinal // shape[i]
+        sh = shape[i]
+        out_index[i] = int(curr_ordinal % sh)
+        curr_ordinal = curr_ordinal // sh
 
 
 def broadcast_index(
